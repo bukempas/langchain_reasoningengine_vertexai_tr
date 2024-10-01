@@ -24,3 +24,7 @@ LangChain Reasoning Engine, Vertex AI üzerinde çalışan ve özelleştirilmiş
 
 LangChain Reasoning Engine, üretken yapay zeka uygulamaları oluşturmak ve dağıtmak isteyen geliştiriciler için güçlü bir araçtır. Yönetilen bir hizmet olarak, karmaşıklığı azaltır ve geliştiricilerin uygulamalarının temel mantığına odaklanmalarını sağlar.
 
+#AISprint
+
+“Google Cloud credits are provided for this project.”
+
