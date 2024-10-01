@@ -53,6 +53,9 @@ agent = reasoning_engines.LangchainAgent(
 #Yanıt, bir Python sözlüğü olacaktır ve guncel bilgiyi veremeyecegini belirtecektir.
 response = agent.query(input="1 USD kaç TRY'dir?")
 response
+#{'input': "1 USD kaç TRY'dir?",'output': 'Maalesef, ben gerçek zamanlı bilgi sağlayamıyorum. 
+#Dolayısıyla, güncel USD/TRY kurunu bilmiyorum.\n\n
+#Güncel döviz kuru için bir finans web sitesi veya döviz çevirici kullanmanızı öneririm. \n'}
 
 #model= ve model_kwargs= için desteklenen değerler kümesi her sohbet modeli için farklıdır, 
 #bu nedenle ayrıntılar için ilgili belgelerine başvurmanız gerekir.
