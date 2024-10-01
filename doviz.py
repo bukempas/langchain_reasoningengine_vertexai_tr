@@ -44,43 +44,48 @@ model_kwargs = {
 }
 
 #Artık model yapılandırmalarını kullanarak bir LangchainAgent oluşturabilir ve sorgulayabilirsiniz:
-#Yanıt, bir Python sözlüğü olacaktır ve guncel bilgiyi veremeyecegini belirtecektir.
+
 agent = reasoning_engines.LangchainAgent(
-    model=model,                # Required.
-    model_kwargs=model_kwargs,  # Optional.
+    model=model,                # Gerekli
+    model_kwargs=model_kwargs,  # İstege bagli
 )
 
-response = agent.query(input="What is the exchange rate from US dollars to Swedish currency?")
+#Yanıt, bir Python sözlüğü olacaktır ve guncel bilgiyi veremeyecegini belirtecektir.
+response = agent.query(input="1 USD kaç TRY'dir?")
 response
 
+#model= ve model_kwargs= için desteklenen değerler kümesi her sohbet modeli için farklıdır, 
+#bu nedenle ayrıntılar için ilgili belgelerine başvurmanız gerekir.
 agent = reasoning_engines.LangchainAgent(
     model=model,                # Gerekli
     model_kwargs=model_kwargs,  # İstege baglı.
 )
+
+#Modelinizi tanımladıktan sonraki adım, modelinizin Reasoning(muhakeme) için kullandığı araçları(Tools) tanımlamaktır. 
+#Bir araç (Tool), bir LangChain aracı veya bir Python fonksiyonu olabilir.
 
 def get_exchange_rate(
     currency_from: str = "USD",
     currency_to: str = "EUR",
     currency_date: str = "latest",
 ):
-    """Retrieves the exchange rate between two currencies on a specified date.
+    """İki para birimi arasındaki döviz kurunu belirtilen tarihte çevirir .
 
-    Uses the Frankfurter API (https://api.frankfurter.app/) to obtain
-    exchange rate data.
+Döviz kuru verilerini elde etmek için Frankfurter API'sini (https://api.frankfurter.app/) kullanır.
 
-    Args:
-        currency_from: The base currency (3-letter currency code).
-            Defaults to "USD" (US Dollar).
-        currency_to: The target currency (3-letter currency code).
-            Defaults to "EUR" (Euro).
-        currency_date: The date for which to retrieve the exchange rate.
-            Defaults to "latest" for the most recent exchange rate data.
-            Can be specified in YYYY-MM-DD format for historical rates.
+Argümanlar:
+currency_from: Temel para birimi (3 harfli para birimi kodu).
+Varsayılan olarak "USD" (ABD Doları).
+currency_to: Hedef para birimi (3 harfli para birimi kodu).
+Varsayılan olarak "EUR" (Euro).
+currency_date: Döviz kurunun alınacağı tarih.
+En son döviz kuru verileri için varsayılan olarak "latest".
+Geçmiş oranlar için YYYY-AA-GG biçiminde belirtilebilir.
 
-    Returns:
-        dict: A dictionary containing the exchange rate information.
-            Example: {"amount": 1.0, "base": "USD", "date": "2023-11-24",
-                "rates": {"EUR": 0.95534}}
+Sonuç şu şekilde olur:
+dict: Döviz kuru bilgilerini içeren bir sözlük.
+Örnek: {"amount": 1.0, "base": "USD", "date": "2023-11-24",
+"rates": {"EUR": 0.95534}}"""
     """
     import requests
     response = requests.get(
@@ -88,16 +93,20 @@ def get_exchange_rate(
         params={"from": currency_from, "to": currency_to},
     )
     return response.json()
+    
+#"Uygulamanızda kullanmadan önce fonksiyonu test etmek için aşağıdaki kodu çalıştırın:"
+get_exchange_rate(currency_from="USD", currency_to="TRY")
 
-get_exchange_rate(currency_from="USD", currency_to="SEK")
-
+#Aracı(Tool) LangchainAgent şablonunun içinde kullanmak için, tools= argümanı altındaki araçlar listesine ekleyeceksiniz:
 agent = reasoning_engines.LangchainAgent(
-    model=model,                # Required.
-    tools=[get_exchange_rate],  # Optional.
-    model_kwargs=model_kwargs,  # Optional.
+    model=model,                # Gerekli
+    tools=[get_exchange_rate],  # Istege bagli
+    model_kwargs=model_kwargs,  # Istege bagli
 )
 
+#Yanıt, aşağıdakine benzer bir sözlük olacaktır:
 response = agent.query(
-    input="What is the exchange rate from US dollars to Swedish currency?"
+    input="1 USD kaç TRY'dir?"
 )
 response
+#{'input': "Y1 USD kaç TRY'dir?", 'output': "1 USD, 34.181 TRY'dir. \n"}
