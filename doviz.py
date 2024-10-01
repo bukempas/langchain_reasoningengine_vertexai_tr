@@ -1,5 +1,9 @@
+#Oncelikle Google Cloud proje, bucket bilgilerini almak ve ayarları yapmanız gerekir.
+
+#Python Reasoning Engine paketini kullanmak için Vertex AI SDK indirilmesi
 pip install google-cloud-aiplatform[reasoningengine,langchain]
 
+#Reasoning Engine SDK indirmek için aşağıdaki kod kullanılır
 import vertexai
 from vertexai.preview import reasoning_engines
 
@@ -8,8 +12,11 @@ vertexai.init(
     location="us-central1",
     staging_bucket="gs://aisprint_langchain",
 )
+
+#Gemini modeli seçimi: guncel pro veya flash modeli seçilebilir.
 model = "gemini-1.5-flash-001"
 
+#Guvenlik Ayarları, istege bagli, yoksa standart ayarlar kullanılır.
 from langchain_google_vertexai import HarmBlockThreshold, HarmCategory
 
 safety_settings = {
@@ -20,27 +27,24 @@ safety_settings = {
     HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
 }
 
+#Model parametreleri belirlenmesi, bu da istege bagli, yapılmazsa standart ayarlar kullanılır.
 model_kwargs = {
-    # temperature (float): The sampling temperature controls the degree of
-    # randomness in token selection.
+    # temperature (float): Token seçiminde rastgelelik derecesini kontrol eden örnekleme sıcaklığı.
     "temperature": 0.28,
-    # max_output_tokens (int): The token limit determines the maximum amount of
-    # text output from one prompt.
+    # max_output_tokens (int): Token sınırı, bir promptdan gelen maksimum metin çıktısı miktarını belirler.
     "max_output_tokens": 1000,
-    # top_p (float): Tokens are selected from most probable to least until
-    # the sum of their probabilities equals the top-p value.
+    # top_p (float): Tokenler, olasılıklarının toplamı top-p değerine eşit olana kadar en olası olandan en az olası olana doğru seçilir.
     "top_p": 0.95,
-    # top_k (int): The next token is selected from among the top-k most
-    # probable tokens. This is not supported by all model versions. See
-    # https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/image-understanding#valid_parameter_values
-    # for details.
+    # top_k (int): Bir sonraki token, en olası top-k işaretçi arasından seçilir. Bu, tüm model sürümleri tarafından desteklenmez.
     "top_k": None,
-    # safety_settings (Dict[HarmCategory, HarmBlockThreshold]): The safety
-    # settings to use for generating content.
-    # (you must create your safety settings using the previous step first).
+    # safety_settings (Dict[HarmCategory, HarmBlockThreshold]): İçerik oluşturmak için kullanılacak güvenlik ayarları.
+    # (önceki adımı kullanarak önce güvenlik ayarlarınızı oluşturmalısınız).
+    
     "safety_settings": safety_settings,
 }
 
+#Artık model yapılandırmalarını kullanarak bir LangchainAgent oluşturabilir ve sorgulayabilirsiniz:
+#Yanıt, bir Python sözlüğü olacaktır ve guncel bilgiyi veremeyecegini belirtecektir.
 agent = reasoning_engines.LangchainAgent(
     model=model,                # Required.
     model_kwargs=model_kwargs,  # Optional.
@@ -50,8 +54,8 @@ response = agent.query(input="What is the exchange rate from US dollars to Swedi
 response
 
 agent = reasoning_engines.LangchainAgent(
-    model=model,                # Required.
-    model_kwargs=model_kwargs,  # Optional.
+    model=model,                # Gerekli
+    model_kwargs=model_kwargs,  # İstege baglı.
 )
 
 def get_exchange_rate(
