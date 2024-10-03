@@ -8,9 +8,9 @@ import vertexai
 from vertexai.preview import reasoning_engines
 
 vertexai.init(
-    project="Project-ID",
-    location="location",
-    staging_bucket="gs://bucket",
+    project="Project-ID", #Project-ID bilginiz
+    location="location", #Google Cloud Konum bilgisi
+    staging_bucket="gs://bucket", 
 )
 
 #Gemini modeli seçimi: guncel pro veya flash modeli seçilebilir.
