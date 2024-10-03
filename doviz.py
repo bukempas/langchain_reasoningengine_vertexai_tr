@@ -8,9 +8,9 @@ import vertexai
 from vertexai.preview import reasoning_engines
 
 vertexai.init(
-    project="multimodal1-430318",
-    location="us-central1",
-    staging_bucket="gs://aisprint_langchain",
+    project="Project-ID",
+    location="location",
+    staging_bucket="gs://bucket",
 )
 
 #Gemini modeli seçimi: guncel pro veya flash modeli seçilebilir.
